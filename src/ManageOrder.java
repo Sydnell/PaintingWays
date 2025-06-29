@@ -16,6 +16,13 @@ import java.sql.Connection;
 import javax.swing.table.TableModel;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.table.TableRowSorter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.RowFilter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -39,6 +46,50 @@ public class ManageOrder extends javax.swing.JFrame {
     public ManageOrder() {
         initComponents();
         setLocationRelativeTo(null);
+         TableRowSorter<DefaultTableModel> customerSorter = new TableRowSorter<>((DefaultTableModel) tableCustomer.getModel());
+    tableCustomer.setRowSorter(customerSorter);
+    txtSearchCustomer.getDocument().addDocumentListener(new DocumentListener() {
+        public void insertUpdate(DocumentEvent e) {
+            search(txtSearchCustomer.getText(), customerSorter);
+        }
+        public void removeUpdate(DocumentEvent e) {
+            search(txtSearchCustomer.getText(), customerSorter);
+        }
+        public void changedUpdate(DocumentEvent e) {
+            search(txtSearchCustomer.getText(), customerSorter);
+        }
+    });
+
+    // 🔍 Product search bar
+    TableRowSorter<DefaultTableModel> productSorter = new TableRowSorter<>((DefaultTableModel) tableProduct.getModel());
+    tableProduct.setRowSorter(productSorter);
+    txtSearchProduct.getDocument().addDocumentListener(new DocumentListener() {
+        public void insertUpdate(DocumentEvent e) {
+            search(txtSearchProduct.getText(), productSorter);
+        }
+        public void removeUpdate(DocumentEvent e) {
+            search(txtSearchProduct.getText(), productSorter);
+        }
+        public void changedUpdate(DocumentEvent e) {
+            search(txtSearchProduct.getText(), productSorter);
+        }
+    });
+
+    // 🔍 Cart search bar
+    TableRowSorter<DefaultTableModel> cartSorter = new TableRowSorter<>((DefaultTableModel) tableCart.getModel());
+    tableCart.setRowSorter(cartSorter);
+    txtSearchCart.getDocument().addDocumentListener(new DocumentListener() {
+        public void insertUpdate(DocumentEvent e) {
+            search(txtSearchCart.getText(), cartSorter);
+        }
+        public void removeUpdate(DocumentEvent e) {
+            search(txtSearchCart.getText(), cartSorter);
+        }
+        public void changedUpdate(DocumentEvent e) {
+            search(txtSearchCart.getText(), cartSorter);
+        }
+    });
+
 
     }
 
@@ -96,10 +147,10 @@ public class ManageOrder extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtSearchCustomer = new javax.swing.JTextField();
+        txtSearchProduct = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtSearchCart = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         txtProductName1 = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
@@ -297,33 +348,33 @@ public class ManageOrder extends javax.swing.JFrame {
         jLabel15.setText("Search");
         getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 50, 20));
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchCustomer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtSearchCustomerActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 210, -1));
+        getContentPane().add(txtSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 210, -1));
 
-        jTextField2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchProduct.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtSearchProductActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 110, 230, -1));
+        getContentPane().add(txtSearchProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 110, 230, -1));
 
         jLabel16.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel16.setText("Search");
         getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 110, 50, 20));
 
-        jTextField3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchCart.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchCart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                txtSearchCartActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 110, 200, -1));
+        getContentPane().add(txtSearchCart, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 110, 200, -1));
 
         jLabel17.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel17.setText("Search");
@@ -453,7 +504,7 @@ public class ManageOrder extends javax.swing.JFrame {
                 Paragraph details = new Paragraph(
                         "\tOrder ID: " + orderId
                         + "\nDate: " + myFormat.format(cal.getTime())
-                                + "\n "
+                        + "\n "
                         + "\nCash Tendered: PHP " + tenderedAmount
                         + "\nTotal Paid: PHP " + finalTotalPrice
                         + "\nChange: PHP " + change
@@ -623,17 +674,47 @@ public class ManageOrder extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tableCartMouseClicked
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCustomerActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+        TableRowSorter<DefaultTableModel> cartSorter = new TableRowSorter<>((DefaultTableModel) tableCart.getModel());
+        tableCart.setRowSorter(cartSorter);
+        txtSearchCart.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                search(txtSearchCart.getText(), cartSorter);
+            }
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+            public void removeUpdate(DocumentEvent e) {
+                search(txtSearchCart.getText(), cartSorter);
+            }
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+            public void changedUpdate(DocumentEvent e) {
+                search(txtSearchCart.getText(), cartSorter);
+            }
+        });
+    }//GEN-LAST:event_txtSearchCustomerActionPerformed
+
+    private void txtSearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchProductActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+         TableRowSorter<DefaultTableModel> cartSorter = new TableRowSorter<>((DefaultTableModel) tableCart.getModel());
+        tableCart.setRowSorter(cartSorter);
+        txtSearchCart.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                search(txtSearchCart.getText(), cartSorter);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                search(txtSearchCart.getText(), cartSorter);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                search(txtSearchCart.getText(), cartSorter);
+            }
+        });
+    }//GEN-LAST:event_txtSearchProductActionPerformed
+
+    private void txtSearchCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCartActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSearchCartActionPerformed
 
     private void txtProductName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProductName1ActionPerformed
         // TODO add your handling code here:
@@ -678,6 +759,14 @@ public class ManageOrder extends javax.swing.JFrame {
         });
     }
 
+    private void search(String str, TableRowSorter<DefaultTableModel> sorter) {
+        if (str.trim().length() == 0) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + str));
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSaveOrderDetail;
     private javax.swing.JButton jButton1;
@@ -703,9 +792,6 @@ public class ManageOrder extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JLabel lblFinalTotalPrice;
     private javax.swing.JLabel lblTendered;
     private javax.swing.JTable tableCart;
@@ -718,6 +804,9 @@ public class ManageOrder extends javax.swing.JFrame {
     private javax.swing.JTextField txtProductDescription;
     private javax.swing.JTextField txtProductName1;
     private javax.swing.JTextField txtProductPrice;
+    private javax.swing.JTextField txtSearchCart;
+    private javax.swing.JTextField txtSearchCustomer;
+    private javax.swing.JTextField txtSearchProduct;
     private javax.swing.JTextField txtTendered;
     // End of variables declaration//GEN-END:variables
 
