@@ -6,15 +6,22 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.sql.Connection;
 import javax.swing.table.TableModel;
-
-
-
+import javax.swing.table.TableRowSorter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author sydne
@@ -27,6 +34,44 @@ public class ViewOrders extends javax.swing.JFrame {
     public ViewOrders() {
         initComponents();
         setLocationRelativeTo(null);
+        // --- Customer Search Setup ---
+        DefaultTableModel customerModel = (DefaultTableModel) tableCustomer.getModel();
+        TableRowSorter<DefaultTableModel> customerSorter = new TableRowSorter<>(customerModel);
+        tableCustomer.setRowSorter(customerSorter);
+
+        txtSearchCustomerList.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                searchTable(txtSearchCustomerList.getText(), customerSorter);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                searchTable(txtSearchCustomerList.getText(), customerSorter);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                searchTable(txtSearchCustomerList.getText(), customerSorter);
+            }
+        });
+
+        // --- Order Search Setup ---
+        DefaultTableModel orderModel = (DefaultTableModel) tableOrders.getModel();
+        TableRowSorter<DefaultTableModel> orderSorter = new TableRowSorter<>(orderModel);
+        tableOrders.setRowSorter(orderSorter);
+
+        txtSearchOrderList.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                searchTable(txtSearchOrderList.getText(), orderSorter);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                searchTable(txtSearchOrderList.getText(), orderSorter);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                searchTable(txtSearchOrderList.getText(), orderSorter);
+            }
+        });
+
     }
 
     /**
@@ -46,6 +91,10 @@ public class ViewOrders extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        txtSearchCustomerList = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        txtSearchOrderList = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -77,7 +126,7 @@ public class ViewOrders extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tableCustomer);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 108, 391, -1));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 391, -1));
 
         tableOrders.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -94,7 +143,7 @@ public class ViewOrders extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tableOrders);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(426, 108, 400, 400));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, 400, 400));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Customer List");
@@ -112,24 +161,60 @@ public class ViewOrders extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 560, 75, -1));
 
+        txtSearchCustomerList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchCustomerList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchCustomerListListActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtSearchCustomerList, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 90, 210, -1));
+
+        jLabel15.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        jLabel15.setText("Search");
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 50, 20));
+
+        txtSearchOrderList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchOrderList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchOrderListActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtSearchOrderList, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 210, -1));
+
+        jLabel16.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        jLabel16.setText("Search");
+        getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, 50, 20));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+private void searchCustomerList(String query, TableRowSorter<DefaultTableModel> sorter) {
+        if (query.trim().isEmpty()) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + query));
+        }
+    }
+private void searchTable(String query, TableRowSorter<DefaultTableModel> sorter) {
+    if (query.trim().isEmpty()) {
+        sorter.setRowFilter(null);
+    } else {
+        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + query));
+    }
+}
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) tableCustomer.getModel();
-        try{
+        try {
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("select *from customer");
-            while(rs.next()){
-                model.addRow(new Object[]{rs.getString("customer_pk"),rs.getString("name"),rs.getString("mobileNumber"),rs.getString("email")});
+            while (rs.next()) {
+                model.addRow(new Object[]{rs.getString("customer_pk"), rs.getString("name"), rs.getString("mobileNumber"), rs.getString("email")});
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
-       
+
     }//GEN-LAST:event_formComponentShown
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -142,24 +227,21 @@ public class ViewOrders extends javax.swing.JFrame {
         int index = tableCustomer.getSelectedRow();
         TableModel model = tableCustomer.getModel();
         String id = model.getValueAt(index, 0).toString();
-        
+
         DefaultTableModel orderModel = (DefaultTableModel) tableOrders.getModel();
         orderModel.setRowCount(0);
-        
-        try{
+
+        try {
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("select *from orderDetail where customer_fk="+id+"");
-            while(rs.next()){
-                orderModel.addRow(new Object[]{rs.getString("orderId"),rs.getString("orderDate"),rs.getString("totalPaid")});
+            ResultSet rs = st.executeQuery("select *from orderDetail where customer_fk=" + id + "");
+            while (rs.next()) {
+                orderModel.addRow(new Object[]{rs.getString("orderId"), rs.getString("orderDate"), rs.getString("totalPaid")});
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
-        
-        
-        
+
 
     }//GEN-LAST:event_tableCustomerMouseClicked
 
@@ -170,6 +252,18 @@ public class ViewOrders extends javax.swing.JFrame {
         String orderId = model.getValueAt(index, 0).toString();
         OpenPdf.OpenById(orderId);
     }//GEN-LAST:event_tableOrdersMouseClicked
+
+    private void txtSearchCustomerListListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCustomerListListActionPerformed
+        // TODO add your handling code here:
+
+
+    }//GEN-LAST:event_txtSearchCustomerListListActionPerformed
+
+    private void txtSearchOrderListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchOrderListActionPerformed
+        // TODO add your handling code here:
+
+
+    }//GEN-LAST:event_txtSearchOrderListActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,11 +304,15 @@ public class ViewOrders extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tableCustomer;
     private javax.swing.JTable tableOrders;
+    private javax.swing.JTextField txtSearchCustomerList;
+    private javax.swing.JTextField txtSearchOrderList;
     // End of variables declaration//GEN-END:variables
 }
