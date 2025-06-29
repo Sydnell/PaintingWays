@@ -5,6 +5,10 @@ import javax.swing.JOptionPane;
 import java.sql.*;
 import java.sql.Connection;
 import javax.swing.table.TableModel;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableRowSorter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -24,6 +28,23 @@ public class ManageCustomer extends javax.swing.JFrame {
     public ManageCustomer() {
         initComponents();
         setLocationRelativeTo(null);
+        DefaultTableModel model = (DefaultTableModel) tableCustomer.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        tableCustomer.setRowSorter(sorter);
+
+        txtSearchCustomer.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                search(txtSearchCustomer.getText(), sorter);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                search(txtSearchCustomer.getText(), sorter);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                search(txtSearchCustomer.getText(), sorter);
+            }
+        });
     }
 
     private boolean validateFields() {
@@ -33,6 +54,14 @@ public class ManageCustomer extends javax.swing.JFrame {
             return true;
         }
 
+    }
+
+    private void search(String str, TableRowSorter<DefaultTableModel> sorter) {
+        if (str.trim().length() == 0) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + str));
+        }
     }
 
     /**
@@ -58,7 +87,7 @@ public class ManageCustomer extends javax.swing.JFrame {
         btnReset = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtSearchCustomer = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -153,13 +182,13 @@ public class ManageCustomer extends javax.swing.JFrame {
         jLabel8.setText("Search");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 70, 30));
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchCustomer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtSearchCustomerActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 210, 30));
+        getContentPane().add(txtSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 210, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -189,12 +218,11 @@ public class ManageCustomer extends javax.swing.JFrame {
         String name = txtName.getText();
         String mobileNumber = txtMobileNumber.getText();
         String email = txtEmail.getText();
-        
-        if(validateFields()){
-        JOptionPane.showMessageDialog(null, "All fields are required");
-    }
-        else{
-            try{
+
+        if (validateFields()) {
+            JOptionPane.showMessageDialog(null, "All fields are required");
+        } else {
+            try {
                 Connection con = ConnectionProvider.getCon();
                 PreparedStatement ps = con.prepareStatement("insert into customer (name,mobileNumber,email) values (?,?,?)");
                 ps.setString(1, name);
@@ -204,8 +232,7 @@ public class ManageCustomer extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Customer Added Successfully");
                 setVisible(false);
                 new ManageCustomer().setVisible(true);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
@@ -228,19 +255,19 @@ public class ManageCustomer extends javax.swing.JFrame {
         TableModel model = tableCustomer.getModel();
         String id = model.getValueAt(index, 0).toString();
         customerPk = Integer.parseInt(id);
-        
+
         String name = model.getValueAt(index, 1).toString();
         txtName.setText(name);
-        
+
         String mobileNumber = model.getValueAt(index, 2).toString();
         txtMobileNumber.setText(mobileNumber);
-        
+
         String email = model.getValueAt(index, 3).toString();
         txtEmail.setText(email);
-        
+
         btnSave.setEnabled(false);
         btnUpdate.setEnabled(true);
-        
+
     }//GEN-LAST:event_tableCustomerMouseClicked
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -248,12 +275,11 @@ public class ManageCustomer extends javax.swing.JFrame {
         String name = txtName.getText();
         String mobileNumber = txtMobileNumber.getText();
         String email = txtEmail.getText();
-        
-        if(validateFields()){
-        JOptionPane.showMessageDialog(null, "All fields are required");
-    }
-        else{
-            try{
+
+        if (validateFields()) {
+            JOptionPane.showMessageDialog(null, "All fields are required");
+        } else {
+            try {
                 Connection con = ConnectionProvider.getCon();
                 PreparedStatement ps = con.prepareStatement("update customer set name=?,mobileNumber=?,email=? where customer_pk=?");
                 ps.setString(1, name);
@@ -264,16 +290,15 @@ public class ManageCustomer extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Customer Updated Successfully");
                 setVisible(false);
                 new ManageCustomer().setVisible(true);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCustomerActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtSearchCustomerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -321,10 +346,10 @@ public class ManageCustomer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tableCustomer;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtMobileNumber;
     private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtSearchCustomer;
     // End of variables declaration//GEN-END:variables
 }

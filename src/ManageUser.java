@@ -6,6 +6,10 @@ import java.sql.*;
 import javax.swing.table.TableModel;
 import java.awt.Color;
 import java.sql.Connection;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableRowSorter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -24,6 +28,27 @@ public class ManageUser extends javax.swing.JFrame {
      */
     public ManageUser() {
         initComponents();
+        DefaultTableModel model = (DefaultTableModel) tableUser.getModel();
+TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+tableUser.setRowSorter(sorter);
+
+txtSearchUser.getDocument().addDocumentListener(new DocumentListener() {
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        search(txtSearchUser.getText(), sorter);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        search(txtSearchUser.getText(), sorter);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        search(txtSearchUser.getText(), sorter);
+    }
+});
+
         setLocationRelativeTo(null);
         int x = getX(); // current X after centering
     int y = getY(); // current Y after centering
@@ -48,6 +73,13 @@ public class ManageUser extends javax.swing.JFrame {
             return true;
         }
     }
+    private void search(String str, TableRowSorter<DefaultTableModel> sorter) {
+    if (str.trim().length() == 0) {
+        sorter.setRowFilter(null);
+    } else {
+        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + str));
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,7 +91,7 @@ public class ManageUser extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtSearchUser = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableUser = new javax.swing.JTable();
@@ -93,13 +125,13 @@ public class ManageUser extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtSearchUserActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 210, 30));
+        getContentPane().add(txtSearchUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 210, 30));
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         jLabel1.setText("Manage User");
@@ -365,9 +397,9 @@ public class ManageUser extends javax.swing.JFrame {
         new ManageUser().setVisible(true);
     }//GEN-LAST:event_btnResetActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtSearchUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchUserActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtSearchUserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -420,12 +452,12 @@ public class ManageUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tableUser;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtMobileNumber;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPassword;
+    private javax.swing.JTextField txtSearchUser;
     // End of variables declaration//GEN-END:variables
 }

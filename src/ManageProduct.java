@@ -5,6 +5,11 @@ import java.sql.*;
 import java.sql.Connection;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableRowSorter;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -19,15 +24,34 @@ public class ManageProduct extends javax.swing.JFrame {
     private int productPk = 0;
     private int totalQuantity = 0;
     private String categoryID;
-    
 
     /**
      * Creates new form ManageProduct
      */
     public ManageProduct() {
         initComponents();
+        DefaultTableModel model = (DefaultTableModel) tableProduct.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        tableProduct.setRowSorter(sorter);
+
+        txtSearchProduct.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search(txtSearchProduct.getText(), sorter);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search(txtSearchProduct.getText(), sorter);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                search(txtSearchProduct.getText(), sorter);
+            }
+        });
+
         setLocationRelativeTo(null);
-        
 
         int x = getX(); // current X after centering
         int y = getY(); // current Y after centering
@@ -60,6 +84,14 @@ public class ManageProduct extends javax.swing.JFrame {
             return true;
         }
     }
+    private void search(String str, TableRowSorter<DefaultTableModel> sorter) {
+    if (str.trim().length() == 0) {
+        sorter.setRowFilter(null);
+    } else {
+        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + str));
+    }
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,7 +120,7 @@ public class ManageProduct extends javax.swing.JFrame {
         txtName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtSearchProduct = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -197,13 +229,13 @@ public class ManageProduct extends javax.swing.JFrame {
         jLabel8.setText("Search");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 70, 30));
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchProduct.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtSearchProductActionPerformed(evt);
             }
         });
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 210, 30));
+        getContentPane().add(txtSearchProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 210, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -223,8 +255,6 @@ public class ManageProduct extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
         btnUpdate.setEnabled(false);
-        
-        
 
 
     }//GEN-LAST:event_formComponentShown
@@ -352,9 +382,9 @@ public class ManageProduct extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDescriptionActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtSearchProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchProductActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtSearchProductActionPerformed
 
     /**
      * @param args the command line arguments
@@ -404,12 +434,12 @@ public class ManageProduct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblQuantity;
     private javax.swing.JTable tableProduct;
     private javax.swing.JTextField txtDescription;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPrice;
     private javax.swing.JTextField txtQuantity;
+    private javax.swing.JTextField txtSearchProduct;
     // End of variables declaration//GEN-END:variables
 }

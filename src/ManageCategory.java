@@ -5,6 +5,11 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.sql.Connection;
 import javax.swing.table.TableModel;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableRowSorter;
+
 
 
 /*
@@ -25,6 +30,22 @@ public class ManageCategory extends javax.swing.JFrame {
      */
     public ManageCategory() {
         initComponents();
+        DefaultTableModel model = (DefaultTableModel) tableCategory.getModel();
+TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+tableCategory.setRowSorter(sorter);
+
+txtSearchCategory.getDocument().addDocumentListener(new DocumentListener() {
+    public void insertUpdate(DocumentEvent e) {
+        search(txtSearchCategory.getText(), sorter);
+    }
+    public void removeUpdate(DocumentEvent e) {
+        search(txtSearchCategory.getText(), sorter);
+    }
+    public void changedUpdate(DocumentEvent e) {
+        search(txtSearchCategory.getText(), sorter);
+    }
+});
+
         setLocationRelativeTo(null);
     }
     
@@ -36,6 +57,13 @@ public class ManageCategory extends javax.swing.JFrame {
             return true;
         }
     }
+    private void search(String str, TableRowSorter<DefaultTableModel> sorter) {
+    if (str.trim().length() == 0) {
+        sorter.setRowFilter(null);
+    } else {
+        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + str));
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -56,6 +84,8 @@ public class ManageCategory extends javax.swing.JFrame {
         btnUpdate = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
+        txtSearchCategory = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -133,6 +163,18 @@ public class ManageCategory extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(749, 167, 75, -1));
+
+        txtSearchCategory.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtSearchCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchCategoryActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtSearchCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 210, -1));
+
+        jLabel15.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        jLabel15.setText("Search");
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 50, 20));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -233,6 +275,11 @@ public class ManageCategory extends javax.swing.JFrame {
         btnUpdate.setEnabled(true);
     }//GEN-LAST:event_tableCategoryMouseClicked
 
+    private void txtSearchCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchCategoryActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtSearchCategoryActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -274,10 +321,15 @@ public class ManageCategory extends javax.swing.JFrame {
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableCategory;
     private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtSearchCategory;
+    private javax.swing.JTextField txtSearchCustomerList;
+    private javax.swing.JTextField txtSearchCustomerList1;
+    private javax.swing.JTextField txtSearchCustomerList2;
     // End of variables declaration//GEN-END:variables
 }
