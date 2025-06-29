@@ -17,9 +17,6 @@ import javax.swing.table.TableModel;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
-
-
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -47,7 +44,7 @@ public class ManageOrder extends javax.swing.JFrame {
 
     private void clearProductFields() {
         productPk = 0;
-        txtCashin.setText("");
+        txtTendered.setText("");
         txtProductPrice.setText("");
         txtProductDescription.setText("");
         txtOrderQuantity.setText("");
@@ -85,7 +82,7 @@ public class ManageOrder extends javax.swing.JFrame {
         txtCustomerEmail = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         lblTendered = new javax.swing.JLabel();
-        txtCashin = new javax.swing.JTextField();
+        txtTendered = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         txtProductPrice = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
@@ -209,16 +206,16 @@ public class ManageOrder extends javax.swing.JFrame {
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 360, -1, -1));
 
         lblTendered.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTendered.setText("Cash tendered");
+        lblTendered.setText("Amount Tendered");
         getContentPane().add(lblTendered, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 400, -1, -1));
 
-        txtCashin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        txtCashin.addActionListener(new java.awt.event.ActionListener() {
+        txtTendered.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txtTendered.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCashinActionPerformed(evt);
+                txtTenderedActionPerformed(evt);
             }
         });
-        getContentPane().add(txtCashin, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 420, 330, -1));
+        getContentPane().add(txtTendered, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 420, 330, 30));
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel11.setText("Product Price");
@@ -232,6 +229,11 @@ public class ManageOrder extends javax.swing.JFrame {
         getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 420, -1, -1));
 
         txtProductDescription.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txtProductDescription.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtProductDescriptionActionPerformed(evt);
+            }
+        });
         getContentPane().add(txtProductDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 440, 500, -1));
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -271,7 +273,7 @@ public class ManageOrder extends javax.swing.JFrame {
                 btnSaveOrderDetailActionPerformed(evt);
             }
         });
-        getContentPane().add(btnSaveOrderDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 453, 270, 40));
+        getContentPane().add(btnSaveOrderDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 460, 270, 30));
 
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton3.setText("Reset");
@@ -348,7 +350,7 @@ public class ManageOrder extends javax.swing.JFrame {
         txtCustomerMobileNumber.setEditable(false);
         txtCustomerEmail.setEditable(false);
 
-        txtCashin.setEditable(false);
+        txtTendered.setEditable(true);
         txtProductPrice.setEditable(false);
         txtProductDescription.setEditable(false);
 
@@ -373,9 +375,9 @@ public class ManageOrder extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formComponentShown
 
-    private void txtCashinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCashinActionPerformed
+    private void txtTenderedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenderedActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtCashinActionPerformed
+    }//GEN-LAST:event_txtTenderedActionPerformed
 
     private void txtOrderQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOrderQuantityActionPerformed
         // TODO add your handling code here:
@@ -383,10 +385,33 @@ public class ManageOrder extends javax.swing.JFrame {
 
     private void btnSaveOrderDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveOrderDetailActionPerformed
         // TODO add your handling code here:
-        if (finalTotalPrice != 0 && !txtCustomerName.getText().equals("")) {
-            orderId = getUniqueId("Bill-");
+        String tenderedText = txtTendered.getText().trim();
+        if (tenderedText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter the cash tendered.");
+            return;
+        }
 
+        int tenderedAmount;
+        try {
+            tenderedAmount = Integer.parseInt(tenderedText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid number for cash tendered.");
+            return;
+        }
+
+        if (tenderedAmount < finalTotalPrice) {
+            JOptionPane.showMessageDialog(null, "Insufficient cash tendered.");
+            return;
+        }
+
+        int change = tenderedAmount - finalTotalPrice;
+
+        if (finalTotalPrice != 0 && !txtCustomerName.getText().trim().isEmpty()) {
+            System.out.println("Proceeding to save order and generate PDF...");
+            System.out.println("Proceeding with save: finalTotalPrice=" + finalTotalPrice + ", customerName=" + txtCustomerName.getText());
+            orderId = getUniqueId("Bill-");
             DefaultTableModel dtm = (DefaultTableModel) tableCart.getModel();
+
             if (tableCart.getRowCount() != 0) {
                 for (int i = 0; i < tableCart.getRowCount(); i++) {
                     try {
@@ -395,7 +420,6 @@ public class ManageOrder extends javax.swing.JFrame {
                         st.executeUpdate("UPDATE product SET quantity = quantity - " + Integer.parseInt(dtm.getValueAt(i, 2).toString()) + " WHERE product_pk = " + Integer.parseInt(dtm.getValueAt(i, 0).toString()));
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(null, e);
-
                     }
                 }
             }
@@ -412,71 +436,77 @@ public class ManageOrder extends javax.swing.JFrame {
                 ps.executeUpdate();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
-
+                e.printStackTrace(); // <--- Add this
             }
 
-            //Creating Document
+            // Create PDF
             com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
             try {
                 SimpleDateFormat myFormat = new SimpleDateFormat("dd-MM-yyyy");
                 Calendar cal = Calendar.getInstance();
                 PdfWriter.getInstance(doc, new FileOutputStream(InventoryUtils.billPath + "" + orderId + ".pdf"));
                 doc.open();
-                Paragraph projectName = new Paragraph("                                                                     Inventory Management System\n");
+                Paragraph projectName = new Paragraph("                                                          PaintingWays by LTB Paint Center\n");
                 doc.add(projectName);
                 Paragraph starLine = new Paragraph("****************************************************************************************************************");
                 doc.add(starLine);
-                Paragraph details = new Paragraph("\tOrder ID: " + orderId + "\nDate: " + myFormat.format(cal.getTime()) + "\nTotal Paid: " + finalTotalPrice);
+                Paragraph details = new Paragraph(
+                        "\tOrder ID: " + orderId
+                        + "\nDate: " + myFormat.format(cal.getTime())
+                                + "\n "
+                        + "\nCash Tendered: PHP " + tenderedAmount
+                        + "\nTotal Paid: PHP " + finalTotalPrice
+                        + "\nChange: PHP " + change
+                );
                 doc.add(details);
                 doc.add(starLine);
-                PdfPTable tb1 = new PdfPTable(5);  
+
+                PdfPTable tb1 = new PdfPTable(5);
                 PdfPCell nameCell = new PdfPCell(new Phrase("Name"));
                 PdfPCell descriptionCell = new PdfPCell(new Phrase("Description"));
                 PdfPCell priceCell = new PdfPCell(new Phrase("Price Per Unit"));
-                PdfPCell quantityCell = new PdfPCell(new Phrase("Quantitu"));
+                PdfPCell quantityCell = new PdfPCell(new Phrase("Quantity"));
                 PdfPCell subTotalPriceCell = new PdfPCell(new Phrase("Sub Total Price"));
-                
-                BaseColor backgroundColor = new BaseColor(132,172,196);
+
+                BaseColor backgroundColor = new BaseColor(132, 172, 196);
                 nameCell.setBackgroundColor(backgroundColor);
                 descriptionCell.setBackgroundColor(backgroundColor);
                 priceCell.setBackgroundColor(backgroundColor);
                 quantityCell.setBackgroundColor(backgroundColor);
                 subTotalPriceCell.setBackgroundColor(backgroundColor);
-                
+
                 tb1.addCell(nameCell);
                 tb1.addCell(descriptionCell);
                 tb1.addCell(priceCell);
                 tb1.addCell(quantityCell);
                 tb1.addCell(subTotalPriceCell);
-                
+
                 for (int i = 0; i < tableCart.getRowCount(); i++) {
                     tb1.addCell(tableCart.getValueAt(i, 1).toString());
                     tb1.addCell(tableCart.getValueAt(i, 4).toString());
                     tb1.addCell(tableCart.getValueAt(i, 3).toString());
                     tb1.addCell(tableCart.getValueAt(i, 2).toString());
                     tb1.addCell(tableCart.getValueAt(i, 5).toString());
-                
-            }
-                
+                }
+
                 doc.add(tb1);
                 doc.add(starLine);
-                Paragraph thanksMsg = new Paragraph("Thankyou, Please visit LTB Paint Ceneter again");
-                doc.add(thanksMsg);
-                OpenPdf.OpenById(orderId);
-                
-
-
+                doc.add(new Paragraph("Thank you for shopping!"));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
-             }
-            doc.close();
-            setVisible(false);
-            new ManageOrder().setVisible(true);
+            } finally {
+                doc.close();
+                try {
+                    java.awt.Desktop.getDesktop().open(new java.io.File(InventoryUtils.billPath + orderId + ".pdf"));
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "PDF saved but failed to open automatically.\n" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Missing customer name or total price is 0.");
+        }
 
-        }
-        else{
-            JOptionPane.showMessageDialog(null, "Please add some product to cart or select customer");
-        }
     }//GEN-LAST:event_btnSaveOrderDetailActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -515,7 +545,7 @@ public class ManageOrder extends javax.swing.JFrame {
         productPk = Integer.parseInt(id);
 
         String productName = model.getValueAt(index, 1).toString();
-        txtCashin.setText(productName);
+        txtProductName1.setText(productName);
 
         String productPrice = model.getValueAt(index, 2).toString();
         txtProductPrice.setText(productPrice);
@@ -528,7 +558,7 @@ public class ManageOrder extends javax.swing.JFrame {
         // TODO add your handling code here:
         String noOfUnits = txtOrderQuantity.getText();
         if (!noOfUnits.equals("")) {
-            String productName = txtCashin.getText();
+            String productName = txtProductName1.getText();
             String productDescription = txtProductDescription.getText();
             String productPrice = txtProductPrice.getText();
 
@@ -609,6 +639,10 @@ public class ManageOrder extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtProductName1ActionPerformed
 
+    private void txtProductDescriptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProductDescriptionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtProductDescriptionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -677,7 +711,6 @@ public class ManageOrder extends javax.swing.JFrame {
     private javax.swing.JTable tableCart;
     private javax.swing.JTable tableCustomer;
     private javax.swing.JTable tableProduct;
-    private javax.swing.JTextField txtCashin;
     private javax.swing.JTextField txtCustomerEmail;
     private javax.swing.JTextField txtCustomerMobileNumber;
     private javax.swing.JTextField txtCustomerName;
@@ -685,10 +718,11 @@ public class ManageOrder extends javax.swing.JFrame {
     private javax.swing.JTextField txtProductDescription;
     private javax.swing.JTextField txtProductName1;
     private javax.swing.JTextField txtProductPrice;
+    private javax.swing.JTextField txtTendered;
     // End of variables declaration//GEN-END:variables
 
     private String getUniqueId(String prefix) {
-    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
-    return prefix + sdf.format(new java.util.Date());
-}
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+        return prefix + sdf.format(new java.util.Date());
+    }
 }

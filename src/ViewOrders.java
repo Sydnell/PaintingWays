@@ -60,6 +60,8 @@ public class ViewOrders extends javax.swing.JFrame {
         jLabel1.setText("VIEW ORDERS");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(348, 25, -1, -1));
 
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(391, 400));
+
         tableCustomer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -92,7 +94,7 @@ public class ViewOrders extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tableOrders);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(426, 108, 400, -1));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(426, 108, 400, 400));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Customer List");
