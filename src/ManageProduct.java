@@ -91,6 +91,34 @@ public class ManageProduct extends javax.swing.JFrame {
         sorter.setRowFilter(RowFilter.regexFilter("(?i)" + str));
     }
 }
+    private void checkLowStockItems() {
+    StringBuilder lowStockMessage = new StringBuilder();
+    try {
+        Connection con = ConnectionProvider.getCon();
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT name, quantity FROM product WHERE quantity < 10");
+
+        while (rs.next()) {
+            String name = rs.getString("name");
+            int quantity = rs.getInt("quantity");
+
+            // Add to JLabel message
+            lowStockMessage.append(name).append(" (").append(quantity).append(" pcs)").append(" | ");
+            
+            // Optional: still show pop-up for each item
+            JOptionPane.showMessageDialog(null, "Low Stock Alert!\nProduct: " + name + "\nStock: " + quantity, "Low Stock", JOptionPane.WARNING_MESSAGE);
+        }
+
+        if (lowStockMessage.length() > 0) {
+            lblNotification.setText("Low Stock: " + lowStockMessage.toString());
+        } else {
+            lblNotification.setText("");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e);
+    }
+}
 
 
     /**
@@ -121,6 +149,7 @@ public class ManageProduct extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         txtSearchProduct = new javax.swing.JTextField();
+        lblNotification = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -237,24 +266,42 @@ public class ManageProduct extends javax.swing.JFrame {
         });
         getContentPane().add(txtSearchProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 210, 30));
 
+        lblNotification.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        lblNotification.setForeground(new java.awt.Color(255, 0, 0));
+        getContentPane().add(lblNotification, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 1180, 20));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         // TODO add your handling code here:
-        getAllCategory();
-        DefaultTableModel model = (DefaultTableModel) tableProduct.getModel();
-        try {
-            Connection con = ConnectionProvider.getCon();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("Select *from product inner join category on product.category_fk = category.category_pk");
-            while (rs.next()) {
-                model.addRow(new Object[]{rs.getString("product_pk"), rs.getString("name"), rs.getString("quantity"), rs.getString("price"), rs.getString("description"), rs.getString("category_fk"), rs.getString(8)});
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+    getAllCategory();
+    DefaultTableModel model = (DefaultTableModel) tableProduct.getModel();
+    try {
+        Connection con = ConnectionProvider.getCon();
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("Select * from product inner join category on product.category_fk = category.category_pk");
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getString("product_pk"),
+                rs.getString("name"),
+                rs.getString("quantity"),
+                rs.getString("price"),
+                rs.getString("description"),
+                rs.getString("category_fk"),
+                rs.getString(8)
+            });
         }
-        btnUpdate.setEnabled(false);
+
+        // ✅ Add this line after loading products
+        checkLowStockItems();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e);
+    }
+
+    btnUpdate.setEnabled(false);
+
 
 
     }//GEN-LAST:event_formComponentShown
@@ -420,6 +467,7 @@ public class ManageProduct extends javax.swing.JFrame {
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
@@ -434,6 +482,7 @@ public class ManageProduct extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblNotification;
     private javax.swing.JLabel lblQuantity;
     private javax.swing.JTable tableProduct;
     private javax.swing.JTextField txtDescription;

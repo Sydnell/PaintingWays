@@ -1,5 +1,14 @@
 
+import dao.ConnectionProvider;
 import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -18,12 +27,14 @@ public class Home extends javax.swing.JFrame {
     public Home() {
         initComponents();
         setLocationRelativeTo(null);
+          showLowStockNotification();
        
     }
     
     public Home(String role) {
         initComponents();
         setLocationRelativeTo(null);
+        showLowStockNotification();
         if(role.equals("Admin")){
             btnUser.setVisible(false);
             btnSales.setVisible(false);
@@ -33,6 +44,29 @@ public class Home extends javax.swing.JFrame {
  
         
     }
+    private void showLowStockNotification() {
+    StringBuilder message = new StringBuilder();
+    try {
+        Connection con = ConnectionProvider.getCon();
+        Statement st = (Statement) con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT name, quantity FROM product WHERE quantity < 10");
+
+        while (rs.next()) {
+            String name = rs.getString("name");
+            int quantity = rs.getInt("quantity");
+            message.append(name).append(" (").append(quantity).append(" pcs)").append(" | ");
+        }
+
+        if (message.length() > 0) {
+            lblNotification.setText("Low Stock: " + message.toString());
+        } else {
+            lblNotification.setText("All stocks are sufficient.");
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e);
+    }
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,6 +86,7 @@ public class Home extends javax.swing.JFrame {
         btnCategory = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         btnProduct = new javax.swing.JToggleButton();
+        lblNotification = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -138,6 +173,10 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 160, -1));
+
+        lblNotification.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        lblNotification.setForeground(new java.awt.Color(255, 0, 0));
+        jPanel1.add(lblNotification, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 410, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -241,5 +280,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblNotification;
     // End of variables declaration//GEN-END:variables
 }
