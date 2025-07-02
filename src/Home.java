@@ -32,18 +32,25 @@ public class Home extends javax.swing.JFrame {
     }
     
     public Home(String role) {
-        initComponents();
-        setLocationRelativeTo(null);
-        showLowStockNotification();
-        if(role.equals("Admin")){
-            btnUser.setVisible(false);
-            btnSales.setVisible(false);
-            btnProduct.setVisible(false);
-            btnCategory.setVisible(false); // dito yung mga ma hihide kapag ibang account gamit !
-        }
- 
-        
+    initComponents();
+    setLocationRelativeTo(null);
+    showLowStockNotification();
+
+    if (role.equals("Sales")) {
+        btnUser.setVisible(false);
+        btnSales.setVisible(false);
+        btnProduct.setVisible(false);
+        btnCategory.setVisible(false); // hide for Sales
+    } else if (role.equals("Inventory")) {
+        jButton2.setVisible(false);
+        btnSales.setVisible(false);
+        jButton3.setVisible(false);
+        jButton6.setVisible(false);
+        btnUser.setVisible(false);
+        // show only product-related buttons for inventory
+        // example: Inventory staff can manage products but not users or sales
     }
+}
     private void showLowStockNotification() {
     StringBuilder message = new StringBuilder();
     try {
@@ -87,6 +94,7 @@ public class Home extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         btnProduct = new javax.swing.JToggleButton();
         lblNotification = new javax.swing.JLabel();
+        btnAbout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -178,6 +186,16 @@ public class Home extends javax.swing.JFrame {
         lblNotification.setForeground(new java.awt.Color(255, 0, 0));
         jPanel1.add(lblNotification, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 410, 30));
 
+        btnAbout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/about.png"))); // NOI18N
+        btnAbout.setText("About");
+        btnAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAboutActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnAbout, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 550, 160, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -235,6 +253,11 @@ public class Home extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSalesActionPerformed
 
+    private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
+        // TODO add your handling code here:
+        new About().setVisible(true);
+    }//GEN-LAST:event_btnAboutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -271,6 +294,7 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbout;
     private javax.swing.JButton btnCategory;
     private javax.swing.JToggleButton btnProduct;
     private javax.swing.JButton btnSales;

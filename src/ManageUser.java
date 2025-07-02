@@ -262,7 +262,7 @@ txtSearchUser.getDocument().addDocumentListener(new DocumentListener() {
         try {
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("Select *from appuser where userRole='Admin'");
+            ResultSet rs = st.executeQuery("Select *from appuser where userRole='Sales'");
             while (rs.next()) {
                 model.addRow(new Object[]{rs.getString("appuser_pk"), rs.getString("name"), rs.getString("mobileNumber"), rs.getString("email"), rs.getString("Address"), rs.getString("status")});
             }
@@ -304,7 +304,7 @@ txtSearchUser.getDocument().addDocumentListener(new DocumentListener() {
         } else {
             try {
                 Connection con = (Connection) ConnectionProvider.getCon();
-                PreparedStatement ps = con.prepareStatement("insert into appuser (userRole,name,mobileNumber,email,password,address,status) values ('Admin',?,?,?,?,?,?)");
+                PreparedStatement ps = con.prepareStatement("insert into appuser (userRole,name,mobileNumber,email,password,address,status) values ('Sales',?,?,?,?,?,?)");
                 ps.setString(1, name);
                 ps.setString(2, mobileNumber);
                 ps.setString(3, email);
