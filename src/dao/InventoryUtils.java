@@ -9,7 +9,7 @@ package dao;
  * @author sydne
  */
 public class InventoryUtils {
-    public static String billPath = "C:\\Users\\juan_\\Desktop\\Paintinways receipt";
+    public static String billPath = "C:\\Bills\\";
     
     
 }

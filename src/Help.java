@@ -64,11 +64,8 @@ public class Help extends javax.swing.JFrame {
             message.append(name).append(" (").append(quantity).append(" pcs)").append(" | ");
         }
 
-        if (message.length() > 0) {
-            lblNotification.setText("Low Stock: " + message.toString());
-        } else {
-            lblNotification.setText("All stocks are sufficient.");
-        }
+        
+        
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, e);
     }
@@ -92,7 +89,6 @@ public class Help extends javax.swing.JFrame {
         btnCategory = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         btnProduct = new javax.swing.JToggleButton();
-        lblNotification = new javax.swing.JLabel();
         btnAbout = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -182,10 +178,6 @@ public class Help extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 160, -1));
-
-        lblNotification.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        lblNotification.setForeground(new java.awt.Color(255, 0, 0));
-        jPanel1.add(lblNotification, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 410, 30));
 
         btnAbout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/about.png"))); // NOI18N
@@ -397,6 +389,5 @@ public class Help extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblNotification;
     // End of variables declaration//GEN-END:variables
 }

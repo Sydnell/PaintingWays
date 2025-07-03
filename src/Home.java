@@ -172,9 +172,10 @@ public class Home extends javax.swing.JFrame {
         });
         jPanel1.add(btnProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 160, -1));
 
-        lblNotification.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        lblNotification.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         lblNotification.setForeground(new java.awt.Color(255, 0, 0));
-        jPanel1.add(lblNotification, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 410, 30));
+        lblNotification.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jPanel1.add(lblNotification, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, 780, 50));
 
         btnAbout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/about.png"))); // NOI18N
